@@ -4,44 +4,65 @@
 
 
 bool checkPrime(uint64_t value) {
-    int i;
-    if(value < 2)
-            return 0;
-    for(i = 2; i <= value; i++) {
-        
-        if(value%i == 0)
-            if(value != i)
-                return 0;
-    }
-    return 1;
+  int d;
+  if (value == 1)
+    return false;
+  for (d = 2; d * d <= value; d++) {
+    if (value % d == 0)
+      return false;
+  }
+    return true;
 }
 
 uint64_t nPrime(uint64_t n) {
-    int i=0, c=0;
-    while(true) {
-        i++;
-        if(checkPrime(i))
-            c++;
-        if(c==n)
-            return i;
+  int d, k, value;
+  bool flag = true;
+  value = 2;
+  for (k = 0; n != k; ) {
+    for (d = 2; d * d <= value; d++) {
+      if (value % d == 0) {
+        flag = false;
+        break;
+      }
     }
-    return c;
+    if (flag)
+      k += 1;
+    value += 1;
+    flag = true;
+  }
+  return value - 1;
 }
 
 uint64_t nextPrime(uint64_t value) {
-    int a=value+1;
-    while(true) {
-        if(checkPrime(a))
-            return a;
-        a++;
+  int d;
+  value += 1;
+    for (d = 2; d * d <= value; d++) {
+      if (value % d == 0) {
+        value += 1;
+        d = 1;
+      }
     }
-    return a;
+    return value;
 }
 
 uint64_t sumPrime(uint64_t hbound) {
-    int sum=0,i;
-    for(i = 0; i<hbound; i++)
-    if(checkPrime(i))
-        sum+=i;
-    return sum;
+  uint64_t d, k, i, s;
+  s = 0;
+  uint64_t* resh;
+  resh = new uint64_t[hbound];
+  resh[1] = 0;
+  for (i = 2; i <= hbound; i++)
+    resh[i] = 1;
+    for (d = 2; d * d <= hbound; d++) {
+      if (resh[d] == 1) {
+        for (k = d * d; k <= hbound; k += d) {
+          resh[k] = 0;
+        }
+      }
+    }
+  for (i = 0; i < hbound; i++) {
+    if (resh[i])
+      s += i;
+  }
+  return s;
 }
